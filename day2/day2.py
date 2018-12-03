@@ -1,20 +1,19 @@
 from pathlib import Path
-from operator import mul
 from collections import Counter
 
 ROOT = Path(__file__).parents[0].resolve()
 
 def puzzle1():
-	check_sum = {2: 0, 3: 0}
+	two = 0
+	three = 0
 	with open(str(ROOT / 'day2_input.txt'), 'r') as fin:
 		for line in fin:
-			l = line.strip()
-			counts = Counter(l)
+			counts = Counter(line)
 			if 2 in counts.values():
-				check_sum[2] += 1
+				two += 1
 			if 3 in counts.values():
-				check_sum[3] += 1
-	print('The final check sum is {}'.format(mul(*check_sum.values())))
+				three += 1
+	print('The final check sum is {}'.format(two * three))
 
 def puzzle2():
 	lines = []
@@ -23,7 +22,7 @@ def puzzle2():
 		for line in fin:
 			lines.append(line.strip())
 		for row in lines:
-			seen.append(line)
+			seen.append(row)
 			to_check = [line for line in lines if line not in seen]
 			zipped = zip([row] * len(to_check), to_check)
 			for z in zipped:
