@@ -1,4 +1,5 @@
 from pathlib import Path
+from itertools import zip_longest
 
 
 ROOT = Path(__file__).parents[0].resolve()
@@ -24,6 +25,26 @@ def puzzle1():
     for row in BOARD:
         total += row.count('x')
     print('The total number of overlap is {}'.format(total))
+
+
+def puzzle1alt():
+    seen = set()
+    overlap = []
+    with open(str(ROOT / 'day3_input.txt'), 'r') as fin:
+        for line in fin:
+            pieces = line.split()
+            lpad, tpad = map(int, pieces[2].replace(':', '').split(','))
+            x, y = map(int, pieces[3].split('x'))
+            col = range(lpad, lpad + x)
+            row = range(tpad, tpad + y)
+            for c in col:
+                coords = zip_longest([c], row, fillvalue=c)
+                for coord in coords:
+                    if coord in seen:
+                        overlap.append(coord)
+                    else:
+                        seen.add(coord)
+    print('The total number of overlap is {}'.format(len(set(overlap))))
 
 
 def puzzle2():
