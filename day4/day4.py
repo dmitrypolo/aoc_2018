@@ -7,7 +7,7 @@ ROOT = Path(__file__).parents[0].resolve()
 ex = r'\d{2}-\d{2}-\d{2} \d{2}:\d{2}'
 
 
-def puzzle1():
+def puzzle():
 	lines = []
 	d = {}
 	with open(str(ROOT / 'day4_input.txt'), 'r') as fin:
@@ -25,15 +25,23 @@ def puzzle1():
 		else:
 			d[guard].append(int(line[0].split()[-1].split(':')[-1]))
 	sleepy_guard = [0, 0, 0]
+	freq_guard = [0, 0, 0]
 	for key in d.keys():
 		chunks = [d.get(key)[i: i + 2] for i in range(0, len(d.get(key)), 2)]
-		minutes_asleep = list(chain.from_iterable(list(range(*i)) for i in chunks))
+		minutes_asleep = list(chain.from_iterable((range(*i) for i in chunks)))
+		if minutes_asleep:
+			id_ = int(key.replace('#', ''))
+			time_asleep = len(minutes_asleep)
+			fav_num = max(minutes_asleep, key=minutes_asleep.count)
+			freq_num = minutes_asleep.count(fav_num)
 		if len(minutes_asleep) > sleepy_guard[1]:
-			sleepy_guard = [int(key.replace('#', '')), len(minutes_asleep), 
-				max(minutes_asleep, key=minutes_asleep.count)]
+			sleepy_guard = [id_, time_asleep, fav_num]
+		if freq_num > freq_guard[-1]:
+			freq_guard = [id_, fav_num, freq_num]
 
-	print('The answer is {}'.format(sleepy_guard[0] * sleepy_guard[-1]))
 
+	print('The answer to puzzle 1 is {}'.format(sleepy_guard[0] * sleepy_guard[-1]))
+	print('The answer to puzzle 2 is {}'.format(freq_guard[0] * freq_guard[1]))
 
 if __name__ == '__main__':
-	puzzle1()
+	puzzle()
